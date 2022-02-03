@@ -1,4 +1,4 @@
-### this project make a reflective DLL for use in post exploit state to dump lsass memory without touch hard disk. 
+### this project make a reflective DLL to use in post exploiting state to dump lsass memory without touch hard disk. 
 this proejct Create a Reflective DLL Injector and a Reflective DLL for dump lsass memory without touch hard disk.
 
 for test DLL by injector you can run :
