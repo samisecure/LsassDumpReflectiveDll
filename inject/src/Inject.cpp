@@ -45,7 +45,12 @@ int main( int argc, char * argv[] )
 	HANDLE hProcess       = NULL;
 	HANDLE hToken         = NULL;
 	LPVOID lpBuffer       = NULL;
-	DWORD dwLength        = 0;
+#ifdef _WIN64
+	LARGE_INTEGER liFilesize = { 0 };
+	int64_t dwLength = 0;
+#else
+	DWORD dwLength = 0;
+#endif
 	DWORD dwBytesRead     = 0;
 	DWORD dwProcessId     = 0;
 	TOKEN_PRIVILEGES priv = {0};
@@ -63,12 +68,12 @@ int main( int argc, char * argv[] )
 	do
 	{
 		// Usage: inject.exe [pid] [dll_file]
-		BOOL readOutput;
+		bool readOutput = false;
 		std::string input;
 		int seconds;
 		std::cout << "Would you like to read the DLL Output? (y/N) : ";
 		std::cin >> input;
-		if (input.rfind("y",0) == 0 || input.rfind("Y", 0) == 0) {
+		if (input.rfind('y',0) == 0 || input.rfind('Y', 0) == 0) {
 			std::cout << "Enter number of seconds to wait before Reading Output : ";
 			std::cin >> seconds;
 			readOutput = true;
@@ -86,8 +91,12 @@ int main( int argc, char * argv[] )
 		hFile = CreateFileA( cpDllFile, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL );
 		if( hFile == INVALID_HANDLE_VALUE )
 			BREAK_WITH_ERROR( "Failed to open the DLL file" );
-
-		dwLength = GetFileSize( hFile, NULL );
+#ifdef _WIN64
+		GetFileSizeEx(hFile, &liFilesize);
+		dwLength = liFilesize.QuadPart;
+#else
+		dwLength = GetFileSize(hFile, NULL);
+#endif
 		if( dwLength == INVALID_FILE_SIZE || dwLength == 0 )
 			BREAK_WITH_ERROR( "Failed to get the DLL file size" );
 
